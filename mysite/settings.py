@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
+import dj_database_url # heroku
+# import django_heroku # heroku
+
 import os
 from django.urls import reverse_lazy
 
@@ -37,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'whitenoise.runserver_nostatic', # new!
+    'django.contrib.staticfiles',
 
     # third apps
     'crispy_forms',
@@ -91,12 +94,27 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+        'default':{
+         'ENGINE':'django.db.backends.postgresql',
+         'NAME':'sms',
+         'USER':'sms',
+         'PASSWORD':'sms',
+         'HOST':'localhost',
+         'PORT':''
+     }
+
+ }
+
+db_from_env = dj_database_url.config(conn_max_age=500) # heroku
+DATABASES['default'].update(db_from_env) # heroku
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 
 # Password validation

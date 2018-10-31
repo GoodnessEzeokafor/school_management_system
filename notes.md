@@ -26,7 +26,7 @@ heroku config:set DISABLE_COLLECTSTATIC=1
 git push heroku master
 heroku ps:scale web=1
 heroku open
-
+dj-database-url==0.5.0
 pipenv install whitenoise==3.3.1
 
 #In settings.py
@@ -45,3 +45,16 @@ git add -A
 git commit -m 'Heroku config'
 git push origin master
 git push heroku master
+
+
+#On command line
+pipenv install dj-database-url==0.5.0
+pipenv install psycopg2==2.7.4
+
+heroku config:set DJANGO_SECRET_KEY=`thisismysecretkey`
+heroku addons | grep -i POSTGRES
+heroku run python manage.py makemigrations
+heroku run python manage.py migrate
+
+
+
