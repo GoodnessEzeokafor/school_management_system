@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h3>Teacher's List</h3>
+    {% for teachers in teachers_list%}
+        <li><a href="{{ teachers.get_absolute_url }}">{{ teachers }}</a></li>
+    {% endfor %}
+</body>
+</html>

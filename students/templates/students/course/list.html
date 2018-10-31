@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Courses</title>
+</head>
+<body>
+    <div class="module">
+        {% for course in object_list %}
+            <div class="course-info">
+                <h3>{{ course.title }}</h3>
+                <p><a href="{% url 'students_profile:student_course_detail_view' %}">Access Contents</a></p>
+            </div>
+            {% empty %}
+            <p>
+                You are not enrolled in any courses yet.
+                <a href="{% url 'courses:course_list_view' %}">Browse courses</a>
+                to enroll in a course.
+            </p>
+        {% endfor %}
+    </div>
+</body>
+</html>

@@ -7,6 +7,8 @@ name = "pypi"
 django = "==2.0.6"
 gunicorn = "*"
 whitenoise = "*"
+django-crispy-forms = "*"
+pillow = "*"
 
 [dev-packages]
 

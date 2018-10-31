@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+    {% load static %}
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+{% block navbar %}
+  <header>
+    <a href="#" class="nav-trigger"><span></span></a>
+  </header>
+  <div class="side-nav">
+    <nav>
+        <ul>
+            <li>
+                <a href="{% if request.user.teacherprofile %}{{ request.user.teacherprofile.get_absolute_url }} {% else %} {{ request.user.studentprofile.get_absolute_url }} {% endif %}">
+                    <span><i class="fas fa-user"></i></span>
+                    Profile
+                </a>
+            </li>
+  
+            <li>
+                <a href="
+                {% if request.user.studentprofile %}
+                    {% url 'students_profile:student_course_list' %}
+                {% elif request.user.teacherprofile %}
+                    {% url 'courses:manage_course_list'%}
+                {% else %}
+                    #
+                {% endif %}
+                ">
+                    <span><i class="fas fa-envelope"></i></span>
+                    Courses
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'account:logout' %}">
+                    <span><i class="fas fa-facebook"></i></span>
+                    Logout
+                </a>
+            </li>
+            {% if request.user.is_admin %}
+            <li>
+              <a href="{% url 'students_profile:student_register'%}">
+                  <span><i class="fas fa-facebook"></i></span>
+                  Add Students
+              </a>
+          </li>
+          <li>
+            <a href="{% url 'teacher_profile:teacher_register'%}">
+                <span><i class="fas fa-facebook"></i></span>
+                Add Teachers
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'account:register'%}">
+                <span><i class="fas fa-facebook"></i></span>
+                Add Staff
+            </a>
+        </li>
+        <li>
+        <a href="#">
+            <span><i class="fas fa-facebook"></i></span>
+            Create Table
+        </a>
+        </li>
+        
+            
+        {% endif %}
+        </ul>
+    </nav>
+  </div>
+{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row">
+      <div class="col-md-4">
+      </div>
+    <div class="col-md-4">
+        <div class="user_icon_div">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path class="user_icon" d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"/>
+        </svg>
+        {% if request.user.teacherprofile %}  
+        <p>{{ message }} {{ request.user.teacherprofile }}</p>
+        {% else %}
+        <p>{{ message }} {{ request.user.studentprofile }}</p>
+        {% endif %}
+
+        <p>Hello {{ request.user.email }}</p>
+
+    </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}

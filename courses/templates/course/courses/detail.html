@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ object.title }}</title>
+</head>
+<body>
+    {% with subject=course.subject %}
+        <h1>{{ object.title }}</h1>
+        <div class="module">
+            <p>
+                <a href="{% url 'courses:course_subject_list_view' subject.slug%}">{{ subjects.title }}</a>
+                {{ course.modules.count }} modules
+                Instructor : {{ course.owner.get_full_name }}
+            </p>
+            {{ object.overview|linebreaks }}
+            {% if request.user.is_authenticated %}
+                <form action="{% url 'students_profile:student_enroll_course' %}">
+                    {{ enroll_form }}
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-primary" value="Enroll now">
+                </form>
+            {% else %}
+                <a href="{% url 'account:register' %}"></a>
+                <a href="{% url 'students_profile:student_proile_create' %}">Create Student Profile</a>
+            {% endif %}
+        </div>
+        {% endwith %}
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DCourses List</title>
+</head>
+<body>
+
+    <h3>Course List</h3>
+    {% for course in object_list %}
+        <h3>{{ course.title }}</h3>
+        <p>
+            <!-- <a href="{% url 'courses:course_create_view' %}">Create Course</a> -->
+            <a href="{% url 'courses:course_edit_view' course.id%}">Edit Course</a>
+            <a href="{% url 'courses:course_module_update' course.id %}">Edit Modules</a>
+            {% if course.modules.count > 0 %}
+                <a href="{% url 'courses:module_content_list' course.modules.first.id %}">Manage Contents</a>
+            {% endif %}
+            <a href="{% url 'courses:course_delete_view' course.id %}">Delete Course</a>
+
+        </p>
+    {% empty %}
+    <p>You haven't Created An Course Yet</p>
+    {% endfor %}
+    <p><a href="{% url 'courses:course_create_view' %}">Create New Course</a></p>
+</body>
+</html>
+

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+<!-- form card login -->
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card rounded-0  mt-5">
+            <div class="card-header">
+                <h3 class="mb-0">Login</h3>
+            </div>
+            <div class="card-body">
+                <form class="form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">
+                    {% csrf_token  %}
+                    {{ form.as_p }}
+                    <div>
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description small text-dark">Remember me on this computer</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn float-right login_btn" id="btnLogin">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+<!-- /form card login -->
+        
+</div>
+</div>
+{%endblock %}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+        {% if subject %}
+            {{ subject.title }}
+        {% else %}
+            All Courses
+        {% endif %}
+
+    </title>
+</head>
+<body>
+
+    <h1>
+        {% if subject %}
+            {{ subject.title }} courses
+        {% else %}
+            All Courses
+        {% endif %}
+    </h1>
+    <div id="contents">
+        <h3>Subjects</h3>
+        <ul id="modules">
+            <li {% if not subject %} class="selected" {% endif %}>
+                <a href="{% url 'courses:course_list_view' %}">All</a>
+            </li>
+            {% for s in subjects %}
+                <li {% if subject == s %} class = 'selected' {% endif %}>
+                    <a href="{% url 'courses:course_subject_list_view' s.slug%}">{{ s.title }}
+                        <br><span>{{ s.total_courses }} courses</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="module">
+        {% for course in courses %}
+            {% with subject=course.subject %}
+                <h3><a href="{% url 'courses:course_detail_view'  course.slug%}">{{ course.title }}</a></h3>
+                <p>
+                    <a href="{% url 'courses:course_subject_list_view' subject.slug%}">{{ subject }}</a>
+                    {{ course.total_modules }} modules.
+                    Instructor: {{ course.owner }}
+                </p>
+            {% endwith %}
+        {% endfor %}
+    </div> 
+</body>
+</html>

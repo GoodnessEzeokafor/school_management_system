@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+        {{ object.title }}
+    </title>
+</head>
+<body>
+        <h1>{{ module.title }}</h1>
+        <div class="contents">
+            <h3>Modules</h3>
+            <ul id="modules">
+                {% for m in object.modules.all %}
+                    <li data-id="{{ m.id }}" {% if m == module %} class="selected" endif %}>
+                        <a href="{% url 'students_profile:student_course_module_detail_view'%} object.id m.id">
+                            <span>
+                                Module <span class="order">{{ m.order|add:1 }}</span>
+                            </span>
+                            <br>
+                            {{ m.title }}
+                        </a>
+                    </li>
+                    {% empty %}
+                    <li>No Modules Yet</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="module">
+            {% for content in modules.contents.all %}
+                {% with item=content.item %}
+                    <h2>{{ item.title }}</h2>
+                    {{ item.render }}
+                {% endwith %}
+            {% endfor %}
+        </div>
+</body> 
+</html>
