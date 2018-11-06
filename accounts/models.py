@@ -4,7 +4,8 @@ from django.contrib.auth.models import (
 )
 from django.utils import timezone
 # Create your models here.
-
+from django.conf import settings
+# from django.contrib.auth import Groups
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -45,6 +46,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
     email = models.EmailField(unique=True, blank=False, null=False)
+    # group = models.ManyToManyField(Group)
     is_active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)
     student = models.BooleanField(default=False)
@@ -86,3 +88,9 @@ class User(AbstractBaseUser):
     @property
     def is_admin(self):
         return self.admin
+
+
+
+# class Profile(models.Model):
+#     user = models.OneToOneField(settings.AUTH_USER_MODEL)
+

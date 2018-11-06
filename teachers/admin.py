@@ -8,6 +8,7 @@ from .models import TeacherProfile
 class TeacherAdmin(admin.ModelAdmin):
     list_display = ('teachers_name', 'teacher_class')
     list_filter = ('teacher_class',)
+    list_editable = ['teacher_class']
 
 
 

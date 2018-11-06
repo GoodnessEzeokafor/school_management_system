@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Create Profile {% endblock %}</title>
+{% block content %}
+<div class="main-content-inner">
+        <div class="row">
+        <div class="col-lg-6 col-ml-12">
+            <div class="row">
+                <!-- Textual inputs start -->
+                <div class="col-12 mt-5">
+                    <h1>Add Student</h1>
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                        {{ user_form|crispy }}
+                        {{ profile_form|crispy }}
+                        <input type="submit" value="Create Profile" class="btn btn-block">              
+                </form> 
+                </div>
+            
+        </div>
+    </div>
+{% endblock %}

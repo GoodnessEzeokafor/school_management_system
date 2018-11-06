@@ -1,49 +1,146 @@
 {% load staticfiles %}
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html class="no-js" lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-
-    <link rel="stylesheet" href="{% static 'fontawsome/css/fontawesome.min.css'%}">
-    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous"> -->
-
-    <title>{% block title %} SMS{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block title %}srtdash - ICO Dashboard{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="assets/images/icon/favicon.ico">
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/metisMenu.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/slicknav.min.css' %}">
+    <!-- amchart css -->
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+    <!-- others css -->
+    <link rel="stylesheet" href="{% static 'assets/css/typography.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/default-css.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}">
+    <!-- modernizr css -->
+    <script src="{% static 'assets/js/vendor/modernizr-2.8.3.min.js' %}"></script>
 </head>
+
 <body>
 {% block navbar %}
-<nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
-<div class="container">
 
-    <a href="#" class="navbar-brand"><i>SMS</i></a>
-
-  <button class="navbar-toggler" data-target="#target_name" data-toggle="collapse">
-      <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="target_name">
-    <ul class="navbar-nav mr-auto">
-    {% if request.user.is_authenticated %}
-      <li class="nav-item">
-          <a href="{% url 'home'  %}" class="nav-link">Home</a>
-      </li>
-    {% endif %}
-    </ul>
-  </div>
-  </div>
-</nav>
 {% endblock %}
+
+
+    <!-- preloader area start -->
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+    <!-- preloader area end -->
+    <!-- page container area start -->
+    <div class="page-container">
+        <!-- SIDEBAR -->
+        <!-- sidebar menu area start -->
+        <div class="sidebar-menu">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <a href="{% url 'dashboard'%}" style="color:white; font-size:23px;">SMS.ng</a>                        
+                </div>
+            </div>
+            <div class="main-menu">
+                <div class="menu-inner">
+                    <nav>
+                        <ul class="metismenu" id="menu">
+                            <li class="active">
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>dashboard</span></a>
+                                <ul class="collapse">
+                                    <li><a href="{% url 'dashboard'%}">Dashboard</a></li>
+                                </ul>
+                            </li>
+                            {% if request.user.student or request.user.staff %}
+                            <li>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-book"></i><span>Courses</span></a>
+                                <ul class="collapse">
+                                    <li><a href="{% url 'accordion'%}">All Courses</a></li>
+                                    {% if request.user.staff  or request.user.admin %}  
+                                        <li><a href="{% url 'courses:course_create_view'%}">Add Course</a></li>
+                                        <li><a href="{% url 'courses:manage_course_list'%}">Your Courses</a></li>
+                                        
+                                    {% endif %}
+                                    {% if request.user.student %}
+                                        <li><a href="{% url 'accordion'%}">Enroll Course</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                            {% endif %}
+                            <li>
+                                    <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-book"></i><span>Subjects</span></a>
+                                    <ul class="collapse">
+                                        <li><a href="{% url 'accordion'%}">All Subjects</a></li>                                            
+                                        <li><a href="{% url 'accordion'%}">Add Subject</a></li>
+                                    </ul>
+                                </li>    
+                             {% if request.user.admin %}   
+                            <li>
+                                    <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-graduation-cap"></i><span>Staff</span></a>
+                                    <ul class="collapse">
+                                        <li><a href="{% url 'teacher_profile:teacher_profile_list' %}"><i class="fa fa-users"></i> All Staff</a></li>                                            
+                                        <li><a href="{% url 'teacher_profile:teacher_profile_create'%}"><i class="fa fa-user-plus"></i> Add Staff</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            {% if request.user.admin %}
+                            <li>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-graduation-cap"></i><span>Students</span></a>
+                                <ul class="collapse">
+                                    <li><a href="{% url 'students_profile:student_profile_list'%}"><i class="fa fa-users"></i> All Students</a></li>                                            
+                                    <li><a href="{% url 'students_profile:student_profile_create'%}"><i class="fa fa-user-plus"></i> Add Student</a></li>
+                                
+                                </ul>
+                            </li>
+                            {% endif %}
+                            {% if request.user.admin %}
+                            <li>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-calendar"></i><span>Generate Timetable</span></a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- sidebar menu area end -->
 {% block content %}
 {% endblock %}
 
-  <script src="{% static 'js/jquery.min.js'%}"></script>
-          <script src="{% static 'js/popper.min.js'%}"></script>
-          <script src="{% static 'js/bootstrap.min.js'%}"></script>
 
-</body>
+    <!-- offset area end -->
+    <!-- jquery latest version -->
+    <script src="{% static 'assets/js/vendor/jquery-2.2.4.min.js' %}"></script>
+    <!-- bootstrap 4 js -->
+    <script src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'assets/js/metisMenu.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.slimscroll.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.slicknav.min.js' %}"></script>
+
+    <!-- start chart js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <!-- start highcharts js -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <!-- start zingchart js -->
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script>
+    zingchart.MODULESDIR = "https://cdn.zingchart.com/modules/";
+    ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "ee6b7db5b51705a13dc2339db3edaf6d"];
+    </script>
+    <!-- all line chart activation -->
+    <script src="{% static 'assets/js/line-chart.js' %}"></script>
+    <!-- all pie chart -->
+    <script src="{%static 'assets/js/pie-chart.js' %}"></script>
+    <!-- others plugins -->
+    <script src="{% static 'assets/js/plugins.js' %}"></script>
+    <script src="{% static 'assets/js/scripts.js' %}"></script></body>
 </html>
-
 
 

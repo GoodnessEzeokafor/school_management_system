@@ -6,12 +6,12 @@ from django.contrib.auth import get_user_model
 User  = get_user_model()
 
 STUDENT_CLASS = (
-    ('jss1', 'JSS1'),
-    ('jss2', 'JSS2'),
-    ('jss3', 'JSS3'),
-    ('ss1', 'SS1'),
-    ('ss2', 'SS2'),
-    ('ss3', 'SS3')
+    ('JSS1', 'jss1'),
+    ('JSS2', 'jss2'),
+    ('JSS3', 'jss3'),
+    ('SS1', 'ss1'),
+    ('SS2', 'ss2'),
+    ('SS3', 'ss3')
 )
 GENDER = (
     ('male', "Male"),
@@ -26,7 +26,7 @@ class StudentProfile(models.Model):
     last_name  = models.CharField(max_length=300, blank=False, null=False)
     mugshot = models.ImageField(upload_to='student/image/%Y/%m/%d')
     gender = models.CharField(max_length=10,choices=GENDER, default='male')
-    student_class = models.CharField(max_length=50, choices=STUDENT_CLASS)
+    student_class = models.CharField(max_length=50, choices=STUDENT_CLASS, default='JSS1')
     date_of_birth = models.DateField(auto_now_add=False)
     date_admitted = models.DateField(auto_now_add=False)
     date_created  = models.DateTimeField(auto_now_add=True)

@@ -2,7 +2,6 @@ from django.urls import reverse_lazy
 from django.contrib.auth import login
 from django.shortcuts import render
 from .forms import (
-    StudentCreationForm,
     StudentProfileCreateForm,
     CourseEnrollForm
 )
@@ -13,11 +12,10 @@ from django.views.generic.edit import (
      FormView
 
 )
+from accounts.forms import UserCreateForm
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-
 from .models import StudentProfile
-
 from courses.models import Course
 from django.contrib.auth.mixins import LoginRequiredMixin
 #Create Student Profile
@@ -31,16 +29,35 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Students Profile
 
 
-class StudentCreateProfileView(CreateView):
-    form_class = StudentProfileCreateForm
-    template_name = 'students/profile/profile_form.html'
-    success_url = reverse_lazy('student_profile_list')
-
+def register(request):
+    if request.method == 'POST':
+        user_form = UserCreateForm(data=request.POST)
+        profile_form = StudentProfileCreateForm(
+            data = request.POST,
+            files = request.FILES
+        )
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save(commit=False)
+            user.student = True
+            user.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user # set the user created to the profile
+            if 'mugshot' in request.FILES:
+                profile.mugshot = request.FILES['mugshot']
+            profile.save()
+    else:
+        user_form = UserCreateForm()
+        profile_form = StudentProfileCreateForm()
+    return render(request,'students/profile/create_form.html', {
+        'user_form':user_form,
+        'profile_form':profile_form
+    })
 
 class StudentListProfileView(ListView):
     model = StudentProfile
     context_object_name = 'students'
     template_name = 'students/students_list/list.html'
+    ordering = ['-student_class']
 
 
 
@@ -49,15 +66,19 @@ class StudentDetailProfileView(DetailView):
     context_object_name = 'student_details'
     template_name = 'students/profile/dashboard.html'
 
+
 class StudentUpdateProfileView(UpdateView):
+    model = StudentProfile
     template_name = 'students/profile/profile_form.html'
     form_class = StudentProfileCreateForm
-    success_url = reverse_lazy('student_profile_detail')
+    
+    def get_success_url(self):
+        return reverse_lazy('students_profile:student_profile_detail', args=[self.object.id])
 
 
 class StudentDeleteProfileView(DeleteView):
     model = StudentProfile
-    success_url = reverse_lazy('student_profile_list')
+    success_url = reverse_lazy('students_profile:student_profile_list')
     template_name = 'students/profile/delete.html'
     
 
@@ -81,7 +102,7 @@ class StudentCourseList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         qs = super(StudentCourseList, self).get_queryset()
-        return qs.filter(students__in=[self.request.user.studentprofile])
+        return qs.filter(students__in=[self.request.user])
 
 
 
@@ -108,20 +129,5 @@ class StudentCourseDetailView(DetailView):
             context['module'] = course.modules.all()[0]
         return context
 
-
-
-# Register Students
-class StudentRegisterView(CreateView):
-    template_name = 'students/student/registration.html'
-    success_url = reverse_lazy('home')
-    form_class = StudentCreationForm
-
-    def form_valid(self, form):
-        result = super(StudentRegisterView, self).form_valid(form)
-        cd = form.cleaned_data
-        # user = authenticate(email=cd['email'], password=['password1'])
-        user = form.save()
-        login(self.request, user)
-        return result
 
 

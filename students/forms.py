@@ -3,34 +3,6 @@ from .models import StudentProfile
 from django.contrib.auth import get_user_model 
 from courses.models import Course
 
-User = get_user_model()
-
-class StudentCreationForm(forms.ModelForm):
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
-    
-    class Meta:
-        model = User
-        fields = ('email',)
-
-
-    def clean_password2(self):
-        password1 = self.cleaned_data.get('password1')
-        password2 = self.cleaned_data.get('password2')
-        if password1 and password2 and password1 != password2:
-            raise form.ValidationError("Password didn't match")
-        return password2
-
-
-
-    def save(self, commit=True):
-        user = super(StudentCreationForm,self).save(commit=False)
-        if commit:
-            user.student = True
-            user.set_password(self.cleaned_data.get('password1'))
-            user.save()
-        return user
-
 
 
 
@@ -38,7 +10,7 @@ class StudentCreationForm(forms.ModelForm):
 class StudentProfileCreateForm(forms.ModelForm):
     class Meta:
         model = StudentProfile
-        exclude = ('date_created', 'date_updated')
+        exclude = ('date_created', 'date_updated', 'user')
 
     def save(self, commit=True):
         user = super(StudentProfileCreateForm, self).save(commit=False)
@@ -47,10 +19,18 @@ class StudentProfileCreateForm(forms.ModelForm):
             user.save()
         return user
     
-    
 
-
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs.update({'class':'form-control'})
+        self.fields['last_name'].widget.attrs.update({'class':'form-control'})
+        self.fields['other_name'].widget.attrs.update({'class':'form-control'})
+        self.fields['gender'].widget.attrs.update({'class':'form-control'})
+        self.fields['student_class'].widget.attrs.update({'class':'form-control'})
+        self.fields['date_of_birth'].widget.attrs.update({'class':'form-control'})
+        self.fields['date_admitted'].widget.attrs.update({'class':'form-control'})
+        self.fields['address'].widget.attrs.update({'class':'form-control'})
 class CourseEnrollForm(forms.Form):
     course = forms.ModelChoiceField(queryset=Course.objects.all(), widget=forms.HiddenInput)
-    
+
+
