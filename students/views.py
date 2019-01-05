@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth import login
 from django.shortcuts import render
 from .forms import (
@@ -18,6 +18,10 @@ from django.views.generic.list import ListView
 from .models import StudentProfile
 from courses.models import Course
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
+
+from django.contrib import messages
+from accounts.models import User
 #Create Student Profile
 
 
@@ -45,6 +49,7 @@ def register(request):
             if 'mugshot' in request.FILES:
                 profile.mugshot = request.FILES['mugshot']
             profile.save()
+            return HttpResponseRedirect(reverse('students_profile:student_profile_list'))
     else:
         user_form = UserCreateForm()
         profile_form = StudentProfileCreateForm()
@@ -72,8 +77,10 @@ class StudentUpdateProfileView(UpdateView):
     template_name = 'students/profile/profile_form.html'
     form_class = StudentProfileCreateForm
     
-    def get_success_url(self):
-        return reverse_lazy('students_profile:student_profile_detail', args=[self.object.id])
+    # def get_success_url(self):
+    #     return HttpResponseRedirect(reverse('students_profile:student_profile_detail', args=[self.object.id]))
+
+
 
 
 class StudentDeleteProfileView(DeleteView):
@@ -90,6 +97,7 @@ class StudentEnrollCourseView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         self.course = form.cleaned_data['course']
         self.course.students.add(self.request.user)
+        # StudentProfile.objects.get(user=self.request.user)
         return super(StudentEnrollCourseView,self).form_valid(form)
     
     def get_success_url(self):
@@ -102,8 +110,9 @@ class StudentCourseList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         qs = super(StudentCourseList, self).get_queryset()
-        return qs.filter(students__in=[self.request.user])
-
+        return qs.filter(students__in=[StudentProfile.objects.get(user=self.request.user)])
+        # self.request.user
+        
 
 
 class StudentCourseDetailView(DetailView):
@@ -131,3 +140,69 @@ class StudentCourseDetailView(DetailView):
 
 
 
+
+
+
+def upload_student(request):
+    '''
+    View for uploading Students
+    '''
+    # quiz = get_object_or_404(Quiz,slug=quiz_slug)
+    template_name = 'students/profile/upload.html'
+    if request.method == 'POST':
+        csvfile = request.FILES['studentprofile']  # gets the input field name
+        print(csvfile.name)  # prints the csv file name
+        if not csvfile.name.endswith('.csv'):
+            print("Invalid!!") # prints invalid at the console
+            messages.errors(request, "CSV file format not supported")
+            return(HttpResponseRedirect('studentprofile:fail'))
+        file_data = csvfile.read().decode("utf-8")  # reads the csv file
+        # print(file_data)
+        lines = file_data.split("\n") # split using the delimiter
+        data_dict = {} # empty dictionary to store the csv data
+        print(len(lines))
+        for line in lines:
+            print(line)
+            fields = line.split(',')
+            # print(fields)
+            user_dict = {
+                'email':fields[0],
+                'password':fields[1],
+                # 'password2':fields[2],
+            }
+            student_profile_dict = {
+                'first_name':fields[2],
+                'other_name':fields[3],
+                'last_name':fields[4],
+                'gender':fields[5],
+                'mugshot':fields[6],
+                'student_class':fields[7],
+                'date_of_birth':fields[9],
+                'date_admitted':fields[9],
+                'address':fields[10]
+            }
+            # print(len(data_dict))
+            if data_dict != '':
+                user = User.objects.create_user(
+                    email=user_dict['email'],
+                    password=user_dict['password']
+                )
+                user.student = True
+                user.save()  # save the user
+                student_profile = StudentProfile.objects.create(
+                    user = user,
+                    first_name = student_profile_dict['first_name'],
+                    other_name = student_profile_dict['other_name'],
+                    last_name = student_profile_dict['last_name'],
+                    mugshot = student_profile_dict['mugshot'],
+                    gender=student_profile_dict['gender'],
+                    student_class = student_profile_dict['student_class'],
+                    date_of_birth = student_profile_dict['date_of_birth'],
+                    date_admitted = student_profile_dict['date_admitted'],
+                    address = student_profile_dict['address']
+                )
+                messages.success(request, "File Successfully Uploaded")
+            else:
+                messages.errors(request, "File not uploaded")
+    context = {}
+    return render(request, template_name, context)

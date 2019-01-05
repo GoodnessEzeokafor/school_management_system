@@ -8,7 +8,8 @@
 </head>
 <body>
     <div class="module">
-        {% for course in object_list %}
+
+         {% for course in object_list %}
             <div class="course-info">
                 <h3>{{ course.title }}</h3>
                 <p><a href="{% url 'students_profile:student_course_detail_view' %}">Access Contents</a></p>
@@ -19,7 +20,7 @@
                 <a href="{% url 'courses:course_list_view' %}">Browse courses</a>
                 to enroll in a course.
             </p>
-        {% endfor %}
+        {% endfor %} 
     </div>
 </body>
 </html>

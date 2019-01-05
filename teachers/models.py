@@ -26,12 +26,19 @@ class TeacherProfile(models.Model):
     first_name = models.CharField(max_length=300, blank=False, null=False)
     other_name = models.CharField(max_length=300, blank=False, null=False)
     last_name = models.CharField(max_length=300, blank=False, null=False)
-    mugshot = models.ImageField(upload_to='teachers/images/%Y/%m/%d')
+    mugshot = models.ImageField(upload_to='teachers/images/%Y/%m/%d',blank=True, null=True)
     gender = models.CharField(max_length=50,choices=GENDER, default='male')
     teacher_class = models.CharField(max_length=50, choices=TEACHER_CLASS, default='JSS1')
-    qualification = models.FileField(upload_to='teacher/file/%Y/%m/%d')
-    date_of_birth = models.DateField(auto_now_add=False)
-    date_admitted = models.DateField(auto_now_add=False)
+    qualification = models.FileField(upload_to='teacher/file/%Y/%m/%d', blank=True, null=True, default='text.txt')
+    date_of_birth = models.DateField(
+        auto_now_add=False,
+        help_text = 'Format: YYYY-MM-DD'
+    )
+    date_admitted = models.DateField(
+        auto_now_add=False,
+        help_text = 'Format: YYYY-MM-DD'
+
+    )
     date_created  = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
     address = models.TextField(blank=True)

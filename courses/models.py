@@ -29,7 +29,7 @@ class Course(models.Model):
     title = models.CharField(max_length=300)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='courses')
     slug = models.SlugField(unique=True, blank=True, null=True, help_text='Course Code')
-    students = models.ManyToManyField(User, related_name='courses_joined', blank=True)
+    students = models.ManyToManyField(StudentProfile, related_name='courses_joined', blank=True)
     overview= models.TextField(blank=False)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -38,6 +38,8 @@ class Course(models.Model):
 
     def __str__(self):
         return "{} by {}".format(self.title, self.owner)
+
+
 
 class Module(models.Model):
     course = models.ForeignKey(Course, related_name='modules', on_delete=models.CASCADE)
@@ -89,16 +91,10 @@ class ItemBase(models.Model):
 
 class Text(ItemBase):
     content = models.TextField()
-
 class File(ItemBase):
     file = models.FileField(upload_to='courses/file/%Y/%m/%d')
-
 class Image(ItemBase):
     file = models.FileField(upload_to='courses/images/%Y/%m/%d')
-
-
-
-
 class Video(ItemBase):
     url = models.URLField()
 

@@ -17,8 +17,11 @@ from django.contrib import admin
 from django.urls import path,include
 from django.views.generic import TemplateView
 from pages.views import HomePageView
+
+#serve media files
 from django.conf import settings
 from django.conf.urls.static import static
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('students/', include('students.urls', namespace='students_profile')),
@@ -28,8 +31,17 @@ urlpatterns = [
     path('home/', TemplateView.as_view(template_name='home.html'), name='home'),
     path('dashboard/', TemplateView.as_view(template_name='index.html'), name='dashboard'),
     path('accordion/', TemplateView.as_view(template_name='accordion.html'), name='accordion'),
-    
-    # path('alert/', TemplateView.as_view(template_name='alert.html'), name='alert'),
+    #Templates
+    path('alert/', TemplateView.as_view(template_name='alert.html'), name='alert'),
+]
+
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
+# path('alert/', TemplateView.as_view(template_name='alert.html'), name='alert'),
     # path('badge/', TemplateView.as_view(template_name='badge.html'), name='badge'),
     # path('button_group/', TemplateView.as_view(template_name='button-group.html'), name='button'),
     # path('card/', TemplateView.as_view(template_name='cards.html'), name='button-group'),
@@ -65,15 +77,3 @@ urlpatterns = [
     # path('forms/', TemplateView.as_view(template_name='index.html'), name='pricing'),
     # path('forms/', TemplateView.as_view(template_name='index.html'), name='error_404'),
     # path('forms/', TemplateView.as_view(template_name='index.html'), name='error_505'),
-    
-    
-    
-
-
-    #Templates
-    path('alert/', TemplateView.as_view(template_name='alert.html'), name='alert'),
-]
-
-
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

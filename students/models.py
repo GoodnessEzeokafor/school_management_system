@@ -21,15 +21,48 @@ GENDER = (
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='studentprofile')
-    first_name = models.CharField(max_length=300, blank=False, null=False)
-    other_name = models.CharField(max_length=300, blank=False, null=False)
-    last_name  = models.CharField(max_length=300, blank=False, null=False)
-    mugshot = models.ImageField(upload_to='student/image/%Y/%m/%d')
-    gender = models.CharField(max_length=10,choices=GENDER, default='male')
-    student_class = models.CharField(max_length=50, choices=STUDENT_CLASS, default='JSS1')
-    date_of_birth = models.DateField(auto_now_add=False)
-    date_admitted = models.DateField(auto_now_add=False)
-    date_created  = models.DateTimeField(auto_now_add=True)
+    first_name = models.CharField(
+        max_length=300, 
+        blank=False,
+        null=False,
+        help_text='Student First Name'
+    )
+    other_name = models.CharField(
+        max_length=300, 
+        blank=False, 
+        null=False,
+        help_text='Student Middle Name'
+    )
+    last_name  = models.CharField(
+        max_length=300, 
+        blank=False,
+        null=False,
+        help_text='Student Last Name'
+    )
+    mugshot = models.ImageField(upload_to='student/image/%Y/%m/%d', blank=True, null=True)
+    gender = models.CharField(
+        max_length=10,
+        choices=GENDER, 
+        default='male',
+        help_text="Student's Gender"
+    )
+    student_class = models.CharField(
+        max_length=50,
+        choices=STUDENT_CLASS, 
+        default='JSS1',
+        help_text="Student's Class"
+    )
+    date_of_birth = models.DateField(
+        auto_now_add=False,
+        help_text = 'Format: YYYY-MM-DD'
+        )
+    date_admitted = models.DateField(
+        auto_now_add=False,
+        help_text = 'Format: YYYY-MM-DD'
+    )
+    date_created  = models.DateTimeField(
+        auto_now_add=True,
+        )
     date_updated = models.DateTimeField(auto_now=True)
     address = models.TextField(blank=True)
     
