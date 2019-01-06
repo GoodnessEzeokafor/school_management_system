@@ -35,12 +35,21 @@ from django.apps import apps
 # Course
 class OwnerMixin(object):
     def get_queryset(self):
+        '''
+        Generic Mixin
+        Queries the the courses by the creator{TeacherProfile} 
+        '''
         qs = super(OwnerMixin, self).get_queryset()
         user = TeacherProfile.objects.get(user=self.request.user)
         return qs.filter(owner=user)
 
 
 class OwnerEditMixin(object):
+    '''
+    Owner Edit Mixin
+        - Will be inherited by the Create and Update view
+        - sets the form instance to the the logged in user
+    '''
     def form_valid(self, form):
         form.instance.owner = TeacherProfile.objects.get(user=self.request.user)
         return super(OwnerEditMixin, self).form_valid(form)

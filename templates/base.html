@@ -60,7 +60,7 @@
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-book"></i><span>Courses</span></a>
                                 <ul class="collapse">
-                                    <li><a href="{% url 'accordion'%}">All Courses</a></li>
+                                    <!-- <li><a href="{% url 'accordion'%}">All Courses</a></li> -->
                                     {% if request.user.staff  or request.user.admin %}  
                                         <li><a href="{% url 'courses:course_create_view'%}">Add Course</a></li>
                                         <li><a href="{% url 'courses:manage_course_list'%}">Your Courses</a></li>
@@ -111,8 +111,6 @@
         <!-- sidebar menu area end -->
 {% block content %}
 {% endblock %}
-
-
     <!-- offset area end -->
     <!-- jquery latest version -->
     <script src="{% static 'assets/js/vendor/jquery-2.2.4.min.js' %}"></script>

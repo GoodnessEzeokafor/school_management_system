@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %} 
-<body>
+{% block title %} {{ block.super }} | Dashboard {% endblock %}
 {% block content %}
 
     <!--[if lt IE 8]>
@@ -81,13 +81,21 @@
                             <div class="breadcrumbs-area clearfix">
                                 <h4 class="page-title pull-left">Dashboard</h4>
                                 <ul class="breadcrumbs pull-left">
-                                    <li><span>Dashboard</span></li>
+                                    {% if request.user.teacherprofile %}
+                                    <li><span>{{ request.user.teacherprofile.first_name }} {{ request.user.teacherprofile.last_name }}</span></li>
+                                    {% else %}
+                                    <li><span>{{ request.user.studentprofile.first_name }} {{ request.user.studentprofile.last_name }}</span></li>
+                                    {% endif %}
                                 </ul>
                             </div>
                         </div>
                         <div class="col-sm-6 clearfix">
                             <div class="user-profile pull-right">
-                                <img class="avatar user-thumb" src="assets/images/author/avatar.png" alt="avatar">
+                                {% if request.user.studentprofile %}
+                                    <img class="avatar user-thumb" src="{{ request.user.studentprofile.mugshot.url }}" alt="avatar">
+                                {% else %}
+                                <img class="avatar user-thumb" src="{{ request.user.teacherprofile.mugshot.url }}" alt="avatar">
+                                {% endif %}
                                 <h4 class="user-name dropdown-toggle" data-toggle="dropdown">{{ request.user }}<i class="fa fa-angle-down"></i></h4>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="#">Edit Profile</a>
@@ -106,11 +114,15 @@
                                 <div class="col-md-6 mt-5 mb-3">
                                     <div class="card">
                                         <div class="seo-fact sbg1">
-                                            <div class="p-4 d-flex justify-content-between align-items-center">
-                                                <div class="seofct-icon"><i class="ti-thumb-up"></i> Likes</div>
-                                                <h2>0</h2>
-                                            </div>
-                                            <canvas id="seolinechart1" height="50"></canvas>
+                                            <a {% if request.user.teacherprofile %}  href="{% url 'courses:manage_course_list'%}" {% else %} href="{% url 'students_profile:student_course_list'%}" {% endif %}>
+                                                <div class="p-4 d-flex justify-content-between align-items-center">
+                                                        <div class="seofct-icon"><i class="fa fa-book"></i> Your Courses</div>
+                                                        <h2>
+                                                            {{request.user.teacherprofile.courses_created.count }}
+                                                        </h2>
+                                                    </div>
+                                                    <canvas id="seolinechart1" height="50"></canvas>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -118,13 +130,14 @@
                                     <div class="card">
                                         <div class="seo-fact sbg2">
                                             <div class="p-4 d-flex justify-content-between align-items-center">
-                                                <div class="seofct-icon"><i class="ti-share"></i> Share</div>
-                                                <h2>0</h2>
+                                                <div class="seofct-icon"><i class="ti-share"></i>Check Performance</div>
+                                                <!-- <h2>0</h2> -->
                                             </div>
                                             <canvas id="seolinechart2" height="50"></canvas>
                                         </div>
                                     </div>
                                 </div>
+                                {% if request.user.is_admin %}
                                 <div class="col-md-6 mb-3 mb-lg-0">
                                     <div class="card">
                                         <div class="seo-fact sbg3">
@@ -135,6 +148,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+                                {% if request.user.is_admin %}
                                 <div class="col-md-6">
                                     <div class="card">
                                         <div class="seo-fact sbg4">
@@ -145,9 +160,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                         <!-- seo fact area end -->
+                        {% if request.user.is_admin %}
                         <!-- Social Campain area start -->
                         <div class="col-lg-4 mt-5">
                             <div class="card">
@@ -157,8 +174,10 @@
                                 </div>
                             </div>
                         </div>
+                    {% endif %}
                         <!-- Social Campain area end -->
                         <!-- Statistics area start -->
+                        {% if request.user.teacherprofile %}
                         <div class="col-lg-8 mt-5">
                             <div class="card">
                                 <div class="card-body">
@@ -167,8 +186,10 @@
                                 </div>
                             </div>
                         </div>
+                   {% endif %}
                         <!-- Statistics area end -->
                         <!-- Advertising area start -->
+                        {% if request.user.is_admin %}
                         <div class="col-lg-4 mt-5">
                             <div class="card h-full">
                                 <div class="card-body">
@@ -177,6 +198,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <!-- Advertising area end -->
                         <!-- sales area start -->
                         <div class="col-xl-9 col-ml-8 col-lg-8 mt-5">
@@ -205,48 +227,6 @@
                                             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse distinctio itaque at.
                                             </p>
                                         </div>
-                                        <div class="timeline-task">
-                                            <div class="icon bg2">
-                                                <i class="fa fa-exclamation-triangle"></i>
-                                            </div>
-                                            <div class="tm-title">
-                                                <h4>Rashed sent you an email</h4>
-                                                <span class="time"><i class="ti-time"></i>09:35</span>
-                                            </div>
-                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse distinctio itaque at.
-                                            </p>
-                                        </div>
-                                        <div class="timeline-task">
-                                            <div class="icon bg2">
-                                                <i class="fa fa-exclamation-triangle"></i>
-                                            </div>
-                                            <div class="tm-title">
-                                                <h4>Rashed sent you an email</h4>
-                                                <span class="time"><i class="ti-time"></i>09:35</span>
-                                            </div>
-                                        </div>
-                                        <div class="timeline-task">
-                                            <div class="icon bg3">
-                                                <i class="fa fa-bomb"></i>
-                                            </div>
-                                            <div class="tm-title">
-                                                <h4>Rashed sent you an email</h4>
-                                                <span class="time"><i class="ti-time"></i>09:35</span>
-                                            </div>
-                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse distinctio itaque at.
-                                            </p>
-                                        </div>
-                                        <div class="timeline-task">
-                                            <div class="icon bg3">
-                                                <i class="ti-signal"></i>
-                                            </div>
-                                            <div class="tm-title">
-                                                <h4>Rashed sent you an email</h4>
-                                                <span class="time"><i class="ti-time"></i>09:35</span>
-                                            </div>
-                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse distinctio itaque at.
-                                            </p>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -261,103 +241,23 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- map area end -->
-                        <!-- testimonial area start -->
-                        <div class="col-xl-7 col-lg-12 mt-5">
-                            <div class="card">
-                                <div class="card-body bg1">
-                                    <h4 class="header-title text-white">Client Feadback</h4>
-                                    <div class="testimonial-carousel owl-carousel">
-                                        <div class="tst-item">
-                                            <div class="tstu-img">
-                                                <img src="assets/images/team/team-author1.jpg" alt="author image">
-                                            </div>
-                                            <div class="tstu-content">
-                                                <h4 class="tstu-name">Abel Franecki</h4>
-                                                <span class="profsn">Designer</span>
-                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae laborum ut nihil numquam a aliquam alias necessitatibus ipsa soluta quam!</p>
-                                            </div>
-                                        </div>
-                                        <div class="tst-item">
-                                            <div class="tstu-img">
-                                                <img src="assets/images/team/team-author2.jpg" alt="author image">
-                                            </div>
-                                            <div class="tstu-content">
-                                                <h4 class="tstu-name">Abel Franecki</h4>
-                                                <span class="profsn">Designer</span>
-                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae laborum ut nihil numquam a aliquam alias necessitatibus ipsa soluta quam!</p>
-                                            </div>
-                                        </div>
-                                        <div class="tst-item">
-                                            <div class="tstu-img">
-                                                <img src="assets/images/team/team-author3.jpg" alt="author image">
-                                            </div>
-                                            <div class="tstu-content">
-                                                <h4 class="tstu-name">Abel Franecki</h4>
-                                                <span class="profsn">Designer</span>
-                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae laborum ut nihil numquam a aliquam alias necessitatibus ipsa soluta quam!</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- testimonial area end -->
-                    </div>
+                       {% endif %}
+            </div>
                 </div>
             </div>
             <!-- main content area end -->
             <!-- footer area start-->
             <footer>
                 <div class="footer-area">
-                    <p>© Copyright 2018. All right reserved. Template by <a href="https://colorlib.com/wp/">Colorlib</a>.</p>
+                    <p>© Copyright {% now "Y" %}. All right reserved</p>
                 </div>
             </footer>
             <!-- footer area end-->
-        </div>
         <!-- page container area end -->
+
+
         <!-- offset area start -->
-        <div class="offset-area">
-            <div class="offset-close"><i class="ti-close"></i></div>
-            <ul class="nav offset-menu-tab">
-                <li><a class="active" data-toggle="tab" href="#activity">Activity</a></li>
-                <li><a data-toggle="tab" href="#settings">Settings</a></li>
-            </ul>
-            <div class="offset-content tab-content">
-                <div id="activity" class="tab-pane fade in show active">
-                    <div class="recent-activity">
-                        <div class="timeline-task">
-                            <div class="icon bg1">
-                                <i class="fa fa-envelope"></i>
-                            </div>
-                            <div class="tm-title">
-                                <h4>Rashed sent you an email</h4>
-                                <span class="time"><i class="ti-time"></i>09:35</span>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse distinctio itaque at.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div id="settings" class="tab-pane fade">
-                    <div class="offset-settings">
-                        <h4>General Settings</h4>
-                        <div class="settings-list">
-                            <div class="s-settings">
-                                <div class="s-sw-title">
-                                    <h5>Notifications</h5>
-                                    <div class="s-swtich">
-                                        <input type="checkbox" id="switch1" />
-                                        <label for="switch1">Toggle</label>
-                                    </div>
-                                </div>
-                                <p>Keep it 'On' When you want to get all the notification.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!--  -->
 {% endblock %}
-</body>
-</html>

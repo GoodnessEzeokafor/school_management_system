@@ -1,29 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% if object %}
-                Edit "{{ object.title }}" 
-           {% else %}
-            Create Course
-           {% endif %}</title>
-</head>
-<body>
-    <h3>
-        {% if object %}
-            Edit "{{ object.title }}"
-        {% else %}
-        Create New Course 
-        {% endif %}
-    </h3>
-        <h3>Create Course</h3>
-        <form action="" method="post">
-            {{ form.as_p }}
-            {% csrf_token %}
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
-            <input type="submit" value="Create form">
-        </form>
-</body>
-</html>
+{% block title %}
+    {% if object %}
+       {{ block.super }} Edit "{{ object.title }}" 
+   {% else %}
+    {{ block.super }} | Create Course
+   {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="main-content-inner">
+    <div class="row">
+        <div class="col-lg-6 col-ml-12">
+            <div class="row">
+                <div class="col-12 mt-5">
+
+                {% if object %}
+                    Edit "{{ object.title }}"
+                {% else %}
+                <h3>Create New Course</h3> 
+                {% endif %}
+                    
+                <form action="" method="post">
+                    {{ form|crispy }}
+                    {% csrf_token %}
+
+                    <input type="submit" class="btn btn-lg" style="background:#3e3b3b; color: aliceblue" value="{% if object %} Edit '{{ object.title }}' {% else %} Create Course {% endif %}">
+                </form>
+                </div>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+    

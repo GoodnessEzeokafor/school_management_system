@@ -1,32 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ object.title }}</title>
-</head>
-<body>
-    {% with subject=course.subject %}
-        <h1>{{ object.title }}</h1>
-        <div class="module">
-            <p>
-                <a href="{% url 'courses:course_subject_list_view' subject.slug%}">{{ subjects.title }}</a>
-                {{ course.modules.count }} modules
-                Instructor : {{ course.owner.get_full_name }}
-            </p>
-            {{ object.overview|linebreaks }}
-            {% if request.user.is_authenticated %}
-                <form action="{% url 'students_profile:student_enroll_course' %}">
-                    {{ enroll_form }}
-                    {% csrf_token %}
-                    <input type="submit" class="btn btn-primary" value="Enroll now">
-                </form>
-            {% else %}
-                <a href="{% url 'account:register' %}"></a>
-                <a href="{% url 'students_profile:student_proile_create' %}">Create Student Profile</a>
-            {% endif %}
+{% extends 'base.html' %}
+{% block title %} {{ block.super }} | Course | {{ object.title }} {% endblock %}
+
+{% block content %}
+<div class="main-content-inner">
+    <div class="row">
+        <div class="col-lg-9 col-ml-12">
+            <div class="row">
+                <div class="col-12 mt-5">
+                        {% with subject=course.subject %}
+                        <h1>{{ object.title }}</h1>
+                        <hr />
+                        <div class="module">
+                            <p>
+                                <a href="{% url 'courses:course_subject_list_view' subject.slug%}">{{ subjects.title }}</a>
+                                {{ course.modules.count }} module{{course.moudules.count|pluralize}} <br>
+                            </p>
+                            <p>
+                                
+                            Instructor : <span class="bold">{{ course.owner }}</span>
+                            </p>
+                            <p>
+                                Date Created : <span class="bold">{{ course.date_created }}</span>   
+                            </p>
+                            <p>
+                                 Updated <span class="bold">{{ course.date_updated|timesince }} ago</span> 
+                            </p>
+
+                            <h3 class="mt-2 pt-3">Course Overview</h3>
+
+                            <div class="description mt-2 mb-3">
+                            {{ object.overview|linebreaks }}
+                            </div>
+                            {% if request.user.is_authenticated %}
+                                {% if request.user.studentprofile %}
+                                <form action="{% url 'students_profile:student_enroll_course' %}">
+                                    {{ enroll_form }}
+                                    {% csrf_token %}
+                                    <input type="submit" class="btn btn-primary" value="Enroll now">
+                                </form>
+                                {% endif %}
+                            {% else %}
+                                <a href="{% url 'account:register' %}"></a>
+                                <a href="{% url 'students_profile:student_proile_create' %}">Create Student Profile</a>
+                            {% endif %}
+                        </div>
+                        {% endwith %}
+                </div>  
+            </div>
         </div>
-        {% endwith %}
-</body>
-</html>
+    </div>
+</div>
+{% endblock %}

@@ -1,16 +1,17 @@
+{% extends 'base.html' %}
 {% load course %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    
+{% block title %} {{ block.super }} |  Course Content {% endblock %}
+{% block content %}
+<div class="main-content-inner">
+<div class="row">
+<div class="col-lg-8 col-ml-12">
+
     {% with course=module.course %}
+    <div class="course-heading pt-5">
         <h1>Course  "{{ course.title }}"</h1>
+        <hr />
+    </div>
+    
         <div class="content">
             <h3>Modules</h3>
             <ul id="modules">
@@ -22,6 +23,7 @@
                             </span>
                             <br />
                             {{ m.title }}
+                            <hr />
                         </a>
                     </li>
                     {% empty %}
@@ -32,6 +34,7 @@
         </div>
         <div class="module">
             <h2>Module {{ module.order|add:1 }}: {{ module.title }}</h2>
+            <hr>
             <h3>Module Content</h3>
             <div id="module-contents">
                 {% for content in module.contents.all %}
@@ -58,6 +61,7 @@
             </ul>
         </div>
     {% endwith %}
-</body>
-</html>
-
+    </div>
+</div>
+</div>
+{% endblock %}

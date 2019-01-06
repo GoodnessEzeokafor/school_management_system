@@ -35,9 +35,15 @@ class Course(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
     
 
+    class Meta:
+        default_permissions = ('add', 'change', 'delete')
+        permissions = (
+            ('can_enroll','Enroll In Course'),
+        )
+
 
     def __str__(self):
-        return "{} by {}".format(self.title, self.owner)
+        return "{} created by {}".format(self.title, self.owner)
 
 
 
