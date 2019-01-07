@@ -1,53 +1,165 @@
-<!DOCTYPE html>
-<html lang="en">
+{% load staticfiles %}
+<!doctype html>
+<html class="no-js" lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>
-        {% if subject %}
-            {{ subject.title }}
-        {% else %}
-            All Courses
-        {% endif %}
-
-    </title>
-</head>
-<body>
-
-    <h1>
         {% if subject %}
             {{ subject.title }} courses
         {% else %}
             All Courses
         {% endif %}
-    </h1>
-    <div id="contents">
-        <h3>Subjects</h3>
-        <ul id="modules">
-            <li {% if not subject %} class="selected" {% endif %}>
-                <a href="{% url 'courses:course_list_view' %}">All</a>
-            </li>
-            {% for s in subjects %}
-                <li {% if subject == s %} class = 'selected' {% endif %}>
-                    <a href="{% url 'courses:course_subject_list_view' s.slug%}">{{ s.title }}
-                        <br><span>{{ s.total_courses }} courses</span>
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="assets/images/icon/favicon.ico">
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/metisMenu.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/slicknav.min.css' %}">
+    <!-- amchart css -->
+    <!-- <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" /> -->
+    <!-- others css -->
+    <link rel="stylesheet" href="{% static 'assets/css/typography.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/default-css.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}">
+    <!-- modernizr css -->
+    <script src="{% static 'assets/js/vendor/modernizr-2.8.3.min.js' %}"></script>
+</head>
+
+<body>
+{% block navbar %}
+
+{% endblock %}
+
+
+    <!-- preloader area start -->
+    <div id="preloader">
+        <div class="loader"></div>
     </div>
-    <div class="module">
+    <!-- preloader area end -->
+    <!-- page container area start -->
+    <div class="page-container">
+        <!-- SIDEBAR -->
+        <!-- sidebar menu area start -->
+        <div class="sidebar-menu">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <a href="{% url 'dashboard'%}" style="color:white; font-size:23px;">Course Management System</a>                        
+                </div>
+            </div>
+            <div class="main-menu">
+                <div class="menu-inner">
+                    <nav>
+                        <ul class="metismenu" id="menu">
+                            <li class="active">
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>dashboard</span></a>
+                                <ul class="collapse">
+                                    <li><a href="{% url 'dashboard'%}">Dashboard</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-book"></i><span>Courses</span></a>
+                                <ul class="collapse">
+                                    <!-- <li><a href="{% url 'accordion'%}">All Courses</a></li> -->
+                                        
+                                        <li {% if not subject %} class="selected" {% endif %}>
+                                                <a href="{% url 'courses:course_list_view' %}">All Courses</a>
+                                            </li>
+                                        <li><a href="{% url 'accordion'%}">Enroll Course</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-book"></i><span>Subjects</span></a>
+                                <ul class="collapse">
+                                    <!-- <li><a href="{% url 'accordion'%}">All Courses</a></li> -->
+                                        
+                                    {% for s in subjects %}
+                                    <li {% if subject == s %} class = 'selected' {% endif %}>
+                                        <a href="{% url 'courses:course_subject_list_view' s.slug%}">{{ s.title }}
+                                            <br><span>{{ s.total_courses }} courses</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                                </ul>
+                            </li>
+                                
+                            <li>
+                            <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-check-square"></i><span>Grades</span></a>
+                            <ul class="collapse">
+                                <!-- <li><a href="{% url 'accordion'%}">All Courses</a></li> -->
+                                    
+                                    <!-- <li {% if not subject %} class="selected" {% endif %}>
+                                            <a href="{% url 'courses:course_list_view' %}">All Courses</a>
+                                        </li>
+                                    <li><a href="{% url 'accordion'%}">Enroll Course</a></li> -->
+                                    </ul>
+                                </li>
+                            <li>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-calendar"></i><span>Timetable</span></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+{% block content %}
+<div class="main-content-inner">
+    <!-- Course List -->
+    <div class="row">
+        <!-- basic modal start -->
+
         {% for course in courses %}
-            {% with subject=course.subject %}
-                <h3><a href="{% url 'courses:course_detail_view'  course.slug%}">{{ course.title }}</a></h3>
-                <p>
-                    <a href="{% url 'courses:course_subject_list_view' subject.slug%}">{{ subject }}</a>
-                    {{ course.total_modules }} modules.
-                    Instructor: {{ course.owner }}
-                </p>
-            {% endwith %}
-        {% endfor %}
-    </div> 
-</body>
+        {% with subject=course.subject %}
+        <div class="col-lg-6 mt-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title"><a href="{% url 'courses:course_detail_view'  course.slug%}">{{ course.title }}</a></h4>
+                        <p>
+                                <a href="{% url 'courses:course_subject_list_view' subject.slug%}">{{ subject }}</a>
+                                {{ course.total_modules }} module{{ course.total_modules|pluralize }}.
+                                Instructor: {{ course.owner }}            
+                        </p>
+                    </div>
+                </div>
+         </div>
+         {% endwith %}
+         {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
+</div>
+    <!-- jquery latest version -->
+    <script src="{% static 'assets/js/vendor/jquery-2.2.4.min.js' %}"></script>
+    <!-- bootstrap 4 js -->
+    <script src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'assets/js/metisMenu.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.slimscroll.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.slicknav.min.js' %}"></script>
+
+    <!-- start chart js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <!-- start highcharts js -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <!-- start zingchart js -->
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script>
+    zingchart.MODULESDIR = "https://cdn.zingchart.com/modules/";
+    ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "ee6b7db5b51705a13dc2339db3edaf6d"];
+    </script>
+    <!-- all line chart activation -->
+    <script src="{% static 'assets/js/line-chart.js' %}"></script>
+    <!-- all pie chart -->
+    <script src="{%static 'assets/js/pie-chart.js' %}"></script>
+    <!-- others plugins -->
+    <script src="{% static 'assets/js/plugins.js' %}"></script>
+    <script src="{% static 'assets/js/scripts.js' %}"></script></body>
 </html>
+

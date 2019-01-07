@@ -30,6 +30,9 @@ class StudentProfileCreateForm(forms.ModelForm):
         self.fields['date_of_birth'].widget.attrs.update({'class':'form-control'})
         self.fields['date_admitted'].widget.attrs.update({'class':'form-control'})
         self.fields['address'].widget.attrs.update({'class':'form-control'})
+
+
+        
 class CourseEnrollForm(forms.Form):
     course = forms.ModelChoiceField(queryset=Course.objects.all(), widget=forms.HiddenInput)
 

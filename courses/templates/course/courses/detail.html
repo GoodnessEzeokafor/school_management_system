@@ -31,7 +31,7 @@
                             <div class="description mt-2 mb-3">
                             {{ object.overview|linebreaks }}
                             </div>
-                            {% if request.user.is_authenticated %}
+                            <!-- {% if request.user.is_authenticated %}
                                 {% if request.user.studentprofile %}
                                 <form action="{% url 'students_profile:student_enroll_course' %}">
                                     {{ enroll_form }}
@@ -42,7 +42,7 @@
                             {% else %}
                                 <a href="{% url 'account:register' %}"></a>
                                 <a href="{% url 'students_profile:student_proile_create' %}">Create Student Profile</a>
-                            {% endif %}
+                            {% endif %} -->
                         </div>
                         {% endwith %}
                 </div>  

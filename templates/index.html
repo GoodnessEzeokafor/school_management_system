@@ -114,7 +114,7 @@
                                 <div class="col-md-6 mt-5 mb-3">
                                     <div class="card">
                                         <div class="seo-fact sbg1">
-                                            <a {% if request.user.teacherprofile %}  href="{% url 'courses:manage_course_list'%}" {% else %} href="{% url 'students_profile:student_course_list'%}" {% endif %}>
+                                            <a {% if request.user.teacherprofile %}  href="{% url 'courses:manage_course_list'%}" {% else %} href="{% url 'courses:course_list_view'%}" {% endif %}>
                                                 <div class="p-4 d-flex justify-content-between align-items-center">
                                                         <div class="seofct-icon"><i class="fa fa-book"></i> Your Courses</div>
                                                         <h2>
@@ -261,3 +261,4 @@
         <!-- offset area start -->
         <!--  -->
 {% endblock %}
+
