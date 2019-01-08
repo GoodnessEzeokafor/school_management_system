@@ -1,11 +1,13 @@
 from django import forms
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 User = get_user_model()
 
 
 
+
+# Registration form
 class UserCreateForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirm Passsword', widget=forms.PasswordInput)
@@ -33,6 +35,7 @@ class UserCreateForm(forms.ModelForm):
         return user
         
 
+# Admin Form
 class UserAdminCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirm Passsword', widget=forms.PasswordInput)
@@ -62,7 +65,7 @@ class UserAdminCreationForm(forms.ModelForm):
 
 
 
-
+# User admin change form
 class UserAdminChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField()
 
@@ -72,4 +75,27 @@ class UserAdminChangeForm(forms.ModelForm):
     
     def clean_password(self):
         return self.initial['password']
+
+
+
+
+# User Login Form
+class UserLoginForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
     
+
+    def clean(self, *args, **kwargs):
+        email = self.cleaned_data.get("email")
+        password = self.cleaned_data.get("password")
+
+        if email and password:
+            user = authenticate(email=email, password=password)
+            if not user:
+                raise forms.ValidationError("This user does not exist")
+            if not user.check_password(password):
+                raise forms.ValidationError("Incorrect password")
+            if not user.is_active:
+                raise forms.ValidationError("This user is no longer active")
+        return super(UserLoginForm, self).clean(*args, **kwargs)
+

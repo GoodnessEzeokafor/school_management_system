@@ -46,7 +46,7 @@ INSTALLED_APPS = [
 
     # third apps
     'crispy_forms',
-
+    'memcache_status',  # caching
         # Local Apps
     'accounts.apps.AccountsConfig',
     'students.apps.StudentsConfig',
@@ -174,3 +174,22 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LOGIN_REDIRECT_URL = reverse_lazy('dashboard')
 LOGOUT_REDIRECT_URL = reverse_lazy('account:login')
 
+
+
+#Caching
+# CACHES = {
+#     'default': {
+#     'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#     'LOCATION': '/tmp/memcached.sock'
+ 
+#     # 'LOCATION': '127.0.0.1:65535',
+#     }
+# }
+
+
+CACHES = {
+    'default':{
+        'BACKEND':'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION':'127.0.0.1:11211'
+    }
+}
