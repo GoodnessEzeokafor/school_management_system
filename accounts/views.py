@@ -43,6 +43,7 @@ def login_view(request):
     return render(request, template_name, context)
 
 
+
 # def login(request, **kwargs):
 #     if request.user.is_authenticated():
 #         return redirect('/cadmin/')

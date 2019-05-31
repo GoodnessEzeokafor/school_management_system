@@ -28,7 +28,7 @@ from students.forms import CourseEnrollForm
 
 from django.forms.models import modelform_factory
 from django.apps import apps
-
+from django.core.cache import cache
 # Create your views here.
 
 
@@ -94,9 +94,15 @@ class CourseListView(TemplateResponseMixin, View):
 
 
     def get(self, request,subject=None):
-        subjects = Subject.objects.annotate(
-            total_courses = Count('courses')
-        )
+        # subjects = Subject.objects.annotate(
+        #     total_courses = Count('courses')
+        # )
+        subjects = cache.get('all_subjects')
+        if not subjects:
+            subjects = Subject.objects.annotate(
+                total_courses = Count('courses')
+            )
+        cache.set('all_subjects', subjects)
         courses = Course.objects.annotate(
             total_modules=Count('modules')
         )

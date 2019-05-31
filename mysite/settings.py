@@ -46,8 +46,10 @@ INSTALLED_APPS = [
 
     # third apps
     'crispy_forms',
-    'memcache_status',  # caching
-        # Local Apps
+    'memcache_status',        
+    'debug_toolbar',
+
+    # Local Apps
     'accounts.apps.AccountsConfig',
     'students.apps.StudentsConfig',
     'teachers.apps.TeachersConfig',
@@ -63,13 +65,23 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware', # new!
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+    'debug_toolbar.middleware.DebugToolbarMiddleware',  # django debug toolbar
 
+]
+INTERNAL_IPS = ('127.0.0.1', )  # debug toolbar
+
+CACHES = {
+'default': {
+'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+'LOCATION': '127.0.0.1:11211',
+}
+}
 ROOT_URLCONF = 'mysite.urls'
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -111,7 +123,7 @@ DATABASES = {
  }
 
 db_from_env = dj_database_url.config(conn_max_age=500) # heroku
-DATABASES['default'].update(db_from_env) # heroku
+DATABASES['default'].update(db_from_env) # he
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -187,9 +199,9 @@ LOGOUT_REDIRECT_URL = reverse_lazy('account:login')
 # }
 
 
-CACHES = {
-    'default':{
-        'BACKEND':'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION':'127.0.0.1:11211'
-    }
-}
+# CACHES = {
+#     'default':{
+#         'BACKEND':'django.core.cache.backends.memcached.MemcachedCache',
+#         'LOCATION':'127.0.0.1:11211'
+#     }
+# }

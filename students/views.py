@@ -58,6 +58,7 @@ def register(request):
         'profile_form':profile_form
     })
 
+
 class StudentListProfileView(ListView):
     model = StudentProfile
     context_object_name = 'students'
