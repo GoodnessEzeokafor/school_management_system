@@ -53,6 +53,8 @@ pipenv install psycopg2==2.7.4
 
 heroku config:set DJANGO_SECRET_KEY=`sdjnsniodnsdoisdndjnjcndks`
 heroku addons | grep -i POSTGRES
+heroku addons:create heroku-postgresql:hobby-dev
+
 heroku run python manage.py makemigrations
 heroku run python manage.py migrate
 heroku run python manage.py createsuperuser
