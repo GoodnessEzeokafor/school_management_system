@@ -22,12 +22,13 @@ ALLOWED_HOSTS = ['*]
 heroku login  # befor creating an app make sure you are logged in
 heroku create 
 heroku git:remote -a app_name
-heroku config:set DISABLE_COLLECTSTATIC=1
+  heroku config:set DISABLE_COLLECTSTATIC=1
 git push heroku master
 heroku ps:scale web=1
 heroku open
 dj-database-url==0.5.0
 pipenv install whitenoise==3.3.1
+heroku config:set DJANGO_SETTINGS_MODULE=mysite.settings.production
 
 #In settings.py
 'whitenoise.runserver_nostatic', # new! { in installed_apps}
