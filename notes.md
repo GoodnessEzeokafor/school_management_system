@@ -52,7 +52,7 @@ git push heroku master
 pipenv install dj-database-url==0.5.0
 pipenv install psycopg2==2.7.4
 
-heroku config:set DJANGO_SECRET_KEY=`sdjnsniodnsdoisdndjnjcndks`
+heroku config:set DJANGO_SECRET_KEY=`sdjnsniodnsdoisdndjnjcndks3453323dddd32s224*^%&`
 heroku addons | grep -i POSTGRES
 heroku addons:create heroku-postgresql:hobby-dev
 
